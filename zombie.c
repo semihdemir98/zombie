@@ -10,9 +10,9 @@ pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 /*number of zombies in the game: 
 you should synchronize threads editing this variable*/
 int zombieCounter;
-int killed_zombie_counter;// we need to handling killed zombie numbers by a variables
+int killed_zombie_counter;// we need to handling killed zombie numbers with a variable
 
-// waiting function 
+// 2 sec waiting function 
 void *delay(int second){
     int milsec = 1000 * second;
     clock_t startTime = clock();
