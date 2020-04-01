@@ -13,8 +13,8 @@ int zombieCounter;
 int killed_zombie_counter;// we need to handling killed zombie numbers with a variable
 
 // 2 sec waiting function 
-void *delay(int second){
-    int milsec = 1000 * second;
+void *delay(double second){
+    double milsec = 1000 * second;
     clock_t startTime = clock();
     while(clock() < (startTime+milsec));
 }
@@ -54,17 +54,23 @@ int getInTheRoomCount(){
 /*doorman thread*/
 void *doorMan(void *n)
 {
-    while(killed100Zombies() || !tooManyZombiesInTheRoom()){
-        // time condition
-        if(delay(2)){
-            int chance = rand() % 2 + 1;
-            //chance condition
-            if(chance > 1){
-                pthread_mutex_lock(&lock);
-                zombieEntered();
-                pthread_mutex_unlock(&lock);
+    while(1){
+        int chance = rand() % 2 + 1;
+        if(chance > 1){
+            pthread_mutex_lock(&lock);
+            // time condition
+            if(tooManyZombiesInTheRoom()){
+                printf("Too many zombies in the room...\n");
+                exit(0);
             }
+            else if(killed100Zombies()){
+                printf("Slayer killed 100 zombies!\n");
+                exit(1);
+            }
+            zombieEntered();
+            pthread_mutex_unlock(&lock);
         }
+        delay(0.002);
     }
     pthread_exit(NULL);
 }
@@ -72,21 +78,27 @@ void *doorMan(void *n)
 /*slayer thread*/
 void *slayer(void *n)
 {
-    while(!tooManyZombiesInTheRoom() || killed100Zombies()){
-        if(zombiesExist()){
-            if(delay(2)){
-                pthread_mutex_lock(&lock);
-                zombieEntered();
-                pthread_mutex_unlock(&lock);
-            }
+    while(1){
+        pthread_mutex_lock(&lock);
+        if(tooManyZombiesInTheRoom()){
+            printf("Too many zombies in the room...\n");
+            exit(0);
         }
+        else if(killed100Zombies()){
+            printf("Slayer killed 100 zombies!\n");
+            exit(1);
+        }
+        if(zombiesExist()){ 
+            zombieKilled();
+        }
+        pthread_mutex_unlock(&lock);
+        delay(0.002);
     }
     pthread_exit(NULL);
 }
 /*simulator main thread*/
 int main(int argc, char **argv)
 {
-
     int nMan = atoi(argv[1]);
     pthread_t t_sl, *t_dm; //thread slayer and thread doorman's variables
     t_dm = malloc (nMan* sizeof(pthread_t));
