@@ -1,3 +1,7 @@
+/* Semih Demir
+ * 01.04.2020  
+ * hw04.cpp
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
