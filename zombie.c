@@ -34,17 +34,22 @@ void zombieKilled(){
 /* Returns true if number of zombies in the room are 
 greater than or equal to 100.*/
 int tooManyZombiesInTheRoom(){
-    return (zombieCounter >= 100);
+    if(zombieCounter >= 100)
+        return 1;
+    return 0;
 }
-
 /*Returns true if more than 100 zombies have been killed.*/
 int killed100Zombies(){
-    return (killed_zombie_counter > 100);
+    if(killed_zombie_counter > 100)
+        return 1;
+    return 0;
 }
 
 /* Returns true if there is at least one zombies in the room.*/
 int zombiesExist(){
-    return (zombieCounter > 0);
+    if(zombieCounter > 0)
+        return 1;
+    return 0;
 }
 /*Returns the count of number of zombies killed.*/
 int getKilledCount(){
@@ -78,7 +83,6 @@ void *doorMan(void *n)
     }
     pthread_exit(NULL);
 }
-
 /*slayer thread*/
 void *slayer(void *n)
 {
@@ -121,7 +125,7 @@ int main(int argc, char **argv)
         pthread_join(t_dm[i], NULL);
     }
 
-    if (killed100Zombies())
+   /*  if (killed100Zombies())
     {
         printf("killed 100 zombies\n");
     }
@@ -129,5 +133,5 @@ int main(int argc, char **argv)
     {
         printf("to many zombies in the room\n");
     }
-    return 0;
+    return 0; */
 }
